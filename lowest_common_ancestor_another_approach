@@ -1,0 +1,32 @@
+//leetcode problem 236
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+TreeNode* lca = NULL;
+pair<bool,bool> computeState(TreeNode* root,TreeNode* a,TreeNode* b){
+	if(root == NULL)
+		return {false,false};
+	pair<bool,bool> leftans = computeState(root->left,a,b);
+	pair<bool,bool> rightans = computeState(root->right,a,b);	
+	pair<bool,bool> currstate = {leftans.first || rightans.first || root == a ,
+								leftans.second || rightans.second || root == b};
+	
+	if(currstate == make_pair(true,true) and lca == NULL){
+		lca  = root;
+	}							
+	return currstate;							
+}
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+			computeState(root,p,q);
+			return lca;
+       
+    }
+};
