@@ -1,0 +1,30 @@
+//1443. Minimum Time to Collect All Apples in a Tree
+//leetcode
+
+class Solution {
+public:
+
+    vector<vector<int> > adjl;
+    int dfs(vector<bool>& hasApple,int curr, int dist, int prev){
+        int res = 0,temp;
+        for(int i:adjl[curr]){
+            if(i != prev){
+                temp = dfs(hasApple,i,dist+1,curr);
+                if(temp){
+                    res += temp-dist;
+                }
+            }
+        }
+        return (res || hasApple[curr] ? res+dist : 0);
+    }
+
+    int minTime(int n, vector<vector<int>>& edges, vector<bool>& hasApple) {
+        adjl.resize(n);
+        for(vector<int> e:edges){
+            adjl[e[0]].push_back(e[1]);
+            adjl[e[1]].push_back(e[0]);
+        }
+        return dfs(hasApple,0,0,-1)*2;
+           //*2 bcoz we have to return back to the node we have started from 
+    }
+};
