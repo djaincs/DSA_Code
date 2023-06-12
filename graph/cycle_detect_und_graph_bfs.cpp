@@ -1,7 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-bool isCyclic(int node,unordered_map<int,list<int> > &adjl,
+bool isCyclicBFS(int node,unordered_map<int,list<int> > &adjl,
         unordered_map<int,bool> &visited){
 
     unordered_map<int,int> parent; 
@@ -28,6 +28,25 @@ bool isCyclic(int node,unordered_map<int,list<int> > &adjl,
     return false;
 }
 
+bool isCyclicDFS(int node,int parent,unordered_map<int,list<int> > &adjl,
+        unordered_map<int,bool> &visited){
+        	
+        	visited[node] = true;
+        	
+        	for(auto i:adjl[node]){
+        		if(!visited[i]){
+        			bool cycle = isCyclicDFS(i,node,adjl,visited);
+        			if(cycle == true)
+        				return true;
+				}
+				else if(i != parent){
+					//cycle present
+					return true;
+				}
+			}
+        	return false;
+		}
+
 string cycleDetection (vector<pair<int,int>>& edges, int n, int m)
 {
     unordered_map<int,list<int> > adjl;
@@ -43,7 +62,7 @@ string cycleDetection (vector<pair<int,int>>& edges, int n, int m)
     
     for(int i=0;i<n;i++){
         if(!visited[i]){
-            bool ans = isCyclic(i,adjl,visited);
+            bool ans = isCyclicDFS(i,-1,adjl,visited);
             if(ans == true)
                 return "Yes";
         }
